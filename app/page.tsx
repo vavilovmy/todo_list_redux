@@ -1,95 +1,54 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client"
+
+import styles from "../styles/Main.module.css";
+import { useDispatch } from "react-redux";
+import { addTodo, toggleComplete } from "./redux/todoSlice";
+import { useState } from "react";
+import { useSelector, TypedUseSelectorHook } from "react-redux";
+import { RootState } from "./redux/store";
+import TodoItem from "./components/TodoItem";
+
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
 
 export default function Home() {
-  return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+  type Todo = {id: number; title: string; completed: boolean}
+
+  const todos: Todo[] = useAppSelector((state) => state.todos)
+
+  const [value, setValue] = useState('');
+
+  const dispatch = useDispatch();
+  
+  const onSubmit = (event:React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    dispatch(addTodo({title: value}))
+  };
+
+
+
+  return (
+    <div className={styles.container}>
+      <main className={styles.main}>
+        <div className={styles.main__todolist}>
+          <h1>Мой список дел</h1>
+          <form onSubmit={onSubmit}>
+          <input 
+            type="text" 
+            id="todo_add" 
+            placeholder="Добавить задачу..."
+            value={value}
+			    	onChange={(event) => setValue(event.target.value)}
+            ></input>
+          <button type="submit" className={styles.todolist__button__add}>Добавить</button>
+          </form>
+          <ul>
+            {todos.map((task) => (
+              <TodoItem key={task.id} id={task.id} title={task.title} completed={task.completed}/>
+            ))}
+          </ul>
         </div>
       </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
     </div>
   );
 }
