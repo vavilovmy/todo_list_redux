@@ -23,9 +23,8 @@ export default function Home() {
   const onSubmit = (event:React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     dispatch(addTodo({title: value}))
+    setValue("")
   };
-
-
 
   return (
     <div className={styles.container}>

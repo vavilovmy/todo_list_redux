@@ -18,10 +18,11 @@
 .container .main__todolist input[type=text] {
   margin-left: 35px;
   width: 350px;
-  height: 35px;
+  height: 55px;
   border: 1px solid rgba(109, 97, 97, 0.4);
   border-radius: 5px;
   padding-left: 15px;
+  font-size: 22px;
 }
 .container .main__todolist input[type=text]:focus {
   border: 1px solid rgba(30, 189, 96, 0.4);
